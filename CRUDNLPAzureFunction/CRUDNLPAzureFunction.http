@@ -1,0 +1,25 @@
+﻿@CRUDNLPAzureFunction_HostAddress = http://localhost:7196
+
+POST {{CRUDNLPAzureFunction_HostAddress}}/api/Function1
+
+###
+
+POST {{CRUDNLPAzureFunction_HostAddress}}/api/NLPChat
+Content-Type: application/json
+
+{
+  "Input": "What's the weather like in Mumbai today?"
+}
+###
+
+POST {{CRUDNLPAzureFunction_HostAddress}}/api/NLPChat
+Content-Type: application/json
+
+{
+  "Input": "What's the weather like in Mumbai today?"
+}
+###
+
+POST {{CRUDNLPAzureFunction_HostAddress}}/api/Function1
+
+###
