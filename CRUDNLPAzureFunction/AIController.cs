@@ -13,11 +13,22 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using CRUDNLPAzureFunction.Services.Interface;
+using System.Runtime.CompilerServices;
 
 namespace CRUDNLPAzureFunction
 {
     public class AIController
     {
+        private readonly IKernelBase _kernelBase;
+
+        public AIController(IKernelBase kernelBase)
+        {
+            _kernelBase = kernelBase;
+        }
+
         [FunctionName("NLPChat")]
         public async Task<string> NLPChat([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req)
         {
@@ -25,22 +36,9 @@ namespace CRUDNLPAzureFunction
 
             try
             {
-                string azureOpenAIDeploymentName = "";
-                string azureOpenAIEndpoint = "";
-                string azureOpenAIAPIKey = "";
+                var kernel = _kernelBase.CreateKernel();
 
-                var builder = Kernel.CreateBuilder();
-
-            //builder.Plugins.AddFromPromptDirectory("./Plugins/CreateToDoPlugin");
-            builder.Plugins.AddFromType<WeatherService>();
-            //builder.Plugins.AddFromType<IdentifyToDoObjectPlugin>();
-            builder.Services.AddAzureOpenAIChatCompletion(azureOpenAIDeploymentName,
-                azureOpenAIEndpoint
-                , azureOpenAIAPIKey);
-
-            var kernel = builder.Build();
-
-            var arguments = new KernelArguments();
+                var arguments = new KernelArguments();
 
             //7. Enable auto function calling
             OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
